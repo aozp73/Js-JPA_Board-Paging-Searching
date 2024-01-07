@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+>
+
+    <body>
+    <div style="margin-top: 70px; margin-bottom: 70px">
+      <div class="container custom-join-container mb-5 mt-5">
+        <div class="text-center" style="margin-bottom: 35px">
+            <h2>회원가입</h2>
+        </div>
+          <form th:action="@{/join}" th:object="${joinInDTO}" method="POST" onsubmit="return validateForm()">
+          <div class="d-flex justify-content-between">
+            <input type="email" th:field="*{email}" onkeyup="checkEmail()"
+                   class="form-control" placeholder="이메일" required>
+            <div th:errors="*{email}"
+                 class="mt-2 mb-3 ms-2" style="color: orangered">
+            </div>
+          </div>
+          <div id="emailCheckMessage" class="mb-3 ms-2"></div>
+          <div class="mb-3">
+            <input type="password" th:field="*{password}" onkeyup="validatePassword()"
+                   class="form-control" placeholder="비밀번호" required>
+            <div th:errors="*{password}"
+                 id="passwordError" class="mt-2 mb-3 ms-2" style="color: orangered">
+            </div>
+          </div>
+          <div>
+            <input type="password" th:field="*{passwordConfirmation}" onkeyup="validatePassword()"
+                   class="form-control" placeholder="비밀번호 확인" required>
+            <div th:errors="*{passwordConfirmation}"
+                 id="passwordConfirmationError" class="mt-2 mb-3 ms-2" style="color: orangered">
+            </div>
+          </div>
+          <div class="mb-3 ms-2" id="passwordCheck" style="color: orangered"></div>
+          <div class="mb-5">
+            <input type="text" th:field="*{username}"
+                   class="form-control" placeholder="아이디" required>
+            <div th:errors="*{username}" class="mt-2 mb-3 ms-2" style="color: orangered">
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-2">
+              <button type="submit" class="btn btn-primary custom-join-btn">
+                등록하기
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+    </body>
+
+    <script th:src="@{/js/joinForm.js}"></script>
+</html>

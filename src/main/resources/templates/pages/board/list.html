@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+>
+
+    <body>
+    <div style="margin-top: 50px; margin-bottom: 50px">
+        <div class="container custom-board-list-container mb-5 mt-5">
+            <div class="mb-3">
+
+                <div class="custom-top-layout">
+                    <div class="custom-flex-item number">
+                        <span>번호</span>
+                    </div>
+                    <div class="custom-flex-item title">
+                        <span>제목</span>
+                    </div>
+                    <div class="custom-flex-item author">
+                        <span>글쓴이</span>
+                    </div>
+                    <div class="custom-flex-item date">
+                        <span>작성일</span>
+                    </div>
+                    <div class="custom-flex-item view">
+                        <span>조회</span>
+                    </div>
+                </div>
+
+                <div th:each="board : ${boardList}" class="custom-board-layout">
+                    <div class="custom-flex-item number custom-board-font">
+                        <span th:text="${board.id}"></span>
+                    </div>
+                    <div class="custom-flex-item title custom-board-font" style="text-align: left">
+                        <a th:href="@{/board/{id}(id=${board.id})}" class="custom-title-alink">
+                            <span th:text="${board.title}"></span>
+                        </a>
+                        <span th:if="${board.commentCount ne 0}" class="ms-2" style="color: #a2a2a2"
+                              th:text="'(' + ${board.commentCount} + ')'"></span>
+                    </div>
+                    <div class="custom-flex-item author custom-board-font">
+                        <span th:text="${board.username}"></span>
+                    </div>
+                    <div class="custom-flex-item date custom-board-font">
+                        <span th:text="${board.createdAtFormat}"></span>
+                    </div>
+                    <div class="custom-flex-item view custom-board-font">
+                        <span th:text="${board.views}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mb-2">
+                <a th:href="@{/auth/board}" class="btn btn-secondary btn-sm me-1">글 등록</a>
+            </div>
+
+            <div>
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${pagingInfo.getIsFirst()} ? 'disabled' : ''">
+                            <a class="page-link" aria-label="Previous"
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${searchInfo.page - 1})}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li th:each="pageNum : ${#numbers.sequence(pagingInfo.startPage, pagingInfo.endPage)}"
+                            th:classappend="${pageNum == searchInfo.page} ? 'active' : ''" class="page-item">
+                            <a class="page-link" th:text="${pageNum}"
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${pageNum})}"></a>
+
+                        <li class="page-item" th:classappend="${pagingInfo.getIsLast()}  ? 'disabled' : ''">
+                            <a class="page-link" aria-label="Next"
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${searchInfo.page + 1})}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div>
+                        <form th:action="@{/board}" th:object="${searchInfo}" method="get">
+                            <div class="input-group">
+                                <select th:field="*{searchType}" class="form-select me-2">
+                                    <option value="title" selected>제목</option>
+                                    <option value="author">작성자</option>
+                                </select>
+                                <div class="me-2">
+                                    <input th:field="*{searchKeyword}" type="text" class="form-control"
+                                           style="width: 270px;" placeholder="검색어를 입력하세요">
+                                </div>
+
+                                <div class="input-group-append">
+                                    <div>
+                                        <button type="submit" class="btn btn-secondary">검색</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+
+    <script th:src="@{/js/list.js}"></script>
+</html>

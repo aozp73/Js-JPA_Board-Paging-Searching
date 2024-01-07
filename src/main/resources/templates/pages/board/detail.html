@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/defaultLayout}"
+      layout:fragment="Content"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+
+    <body>
+    <div style="margin-top: 50px; margin-bottom: 50px">
+        <div class="container custom-board-detail-container mb-5 mt-5">
+            <div class="mb-2 d-flex justify-content-between align-items-center custom-board-detail-title">
+                <div class="ms-1" style="font-size:18px" th:text="${boardList.title}"></div>
+                <div style="color: rgb(128,128,128);" th:text="${boardList.createdAtFormat}"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center ms-1">
+                <div>
+                    <span class="ms-3 me-3" style="color: rgb(128,128,128);" th:text="${boardList.username}"></span>
+                </div>
+                <div class="me-2">
+                    <span class="me-1" style="color: rgb(128,128,128);" th:text="|조회수:  ${boardList.views}|"></span>
+                </div>
+            </div>
+
+            <hr/>
+            <div sec:authorize-expr="isAuthenticated()">
+                <div th:if="${#authentication.principal.user.id == boardList.userId}" class="d-flex justify-content-end mb-2">
+                    <a class="btn btn-secondary btn-sm me-1" th:data-boardId="${boardList.id}"
+                       th:href="@{/auth/board/{boardId}(boardId=${boardList.id})}">수정
+                    </a>
+                    <a class="btn btn-secondary btn-sm" th:data-boardId="${boardList.id}"
+                            th:onclick="deleteBoard(this.getAttribute('data-boardId'))">삭제
+                    </a>
+                </div>
+            </div>
+            <div class="ms-2 py-3" th:text="${boardList.content}">
+            </div>
+            <hr/>
+            <div class="ms-1 mt-4 mb-5">
+                <div class="d-flex justify-content-end me-2 mb-2">
+                    <div id="countComment" style="font-size:13px" th:text="|댓글 ${boardList.commentCount}개|"></div>
+                </div>
+                <ul class="list-group">
+                    <div id="commentSection">
+                        <li th:each="comment : ${boardList.commentDTO}" class="list-group-item">
+                            <div class="mb-2 d-flex justify-content-between">
+                                <div>
+                                    <span class="me-3" th:text="${comment.username}"></span>
+                                    <span class="custom-comment-font" th:text="${comment.createdAtFormat}"></span>
+                                </div>
+                                <div sec:authorize-expr="isAuthenticated()">
+                                    <div th:if="${#authentication.principal.user.id == comment.userId}"
+                                         th:id="'commentUpdateButtonBox-'+ ${comment.id}">
+                                        <span class="custom-comment-font" th:data-commentId="${comment.id}" th:data-boardId="${boardList.id}"
+                                              th:onclick="updateFormat(this.getAttribute('data-commentId'), this.getAttribute('data-boardId'))">수정</span>
+                                        <span class="custom-comment-font" th:data-commentId="${comment.id}" th:data-boardId="${boardList.id}"
+                                              th:onclick="deleteComment(this.getAttribute('data-commentId'), this.getAttribute('data-boardId'))">삭제</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:id="'commentContentBox-'+ ${comment.id}">
+                                <div th:id="'commentContent-'+ ${comment.id}" th:text="${comment.content}" style="font-size: 14px"></div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+
+                <div sec:authorize-expr="isAuthenticated()">
+                    <form class="ms-1">
+                        <div class="mb-2">
+                            <textarea class="form-control" id="commentContent" name="commentContent" rows="3"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" th:data-boardId="${boardList.id}"
+                                    th:onclick="postComment(this.getAttribute('data-boardId'))">댓글 작성</button>
+                        </div>
+                    </form>
+                </div>
+
+        </div>
+    </div>
+    </body>
+
+    <script th:src="@{/js/detail.js}"></script>
+</html>
