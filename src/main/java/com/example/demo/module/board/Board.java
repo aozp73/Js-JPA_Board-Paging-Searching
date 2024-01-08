@@ -12,7 +12,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -28,6 +28,9 @@ public class Board {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    public Board() {
+    }
 
     // Getters and Setters
 }

@@ -20,7 +20,6 @@ public class UserService {
 
     @Transactional
     public void save(Join_InDTO joinInDTO) {
-        log.debug("aa = {}", UserRole.COMMON);
         // 장난 치는거 체크
         if(userRepository.findByEmail(joinInDTO.getEmail()).isPresent()) {
             throw new CustomException("해당 이메일로 가입할 수 없습니다.");
