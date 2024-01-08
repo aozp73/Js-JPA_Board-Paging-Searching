@@ -28,9 +28,4 @@ public class Board {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
-    public Board() {
-    }
-
-    // Getters and Setters
 }
