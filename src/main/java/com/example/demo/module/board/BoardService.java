@@ -1,6 +1,8 @@
 package com.example.demo.module.board;
 
 import com.example.demo.exception.statuscode.CustomException;
+import com.example.demo.exception.statuscode.Exception400;
+import com.example.demo.exception.statuscode.Exception500;
 import com.example.demo.module.board.dto.*;
 import com.example.demo.module.comment.CommentRepository;
 import com.example.demo.module.user.User;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -60,5 +63,21 @@ public class BoardService {
         }
 
         return board.getId();
+    }
+
+    @Transactional
+    public void delete(Long boardId, Long userId) {
+        Board boardEntity = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
+
+        if (!Objects.equals(boardEntity.getUser().getId(), userId)) {
+            throw new Exception400("작성자만 삭제할 수 있습니다.");
+        }
+
+        try {
+            boardRepository.deleteById(boardId);
+        } catch (Exception exception) {
+            throw new Exception500("게시글 삭제에 실패하였습니다.");
+        }
     }
 }
