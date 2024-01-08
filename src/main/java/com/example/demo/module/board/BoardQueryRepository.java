@@ -2,13 +2,17 @@ package com.example.demo.module.board;
 
 import com.example.demo.module.board.dto.BoardListSearch_InDTO;
 import com.example.demo.module.board.dto.BoardList_OutDTO;
-import com.example.demo.module.comment.QComment;
-import com.example.demo.module.user.QUser;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
@@ -27,11 +31,13 @@ public class BoardQueryRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    public List<BoardList_OutDTO> findAllWithUserForList(BoardListSearch_InDTO searchCond) {
-        List<BoardList_OutDTO> result = query.select(Projections.constructor(BoardList_OutDTO.class,
-                        board.id, board.title, user.username,
-                        Expressions.stringTemplate("FORMATDATETIME({0}, {1})", board.createdAt, Expressions.constant("yyyy/MM/dd")),
-                        Expressions.numberTemplate(Long.class, "COUNT({0})", comment.id)))
+    @Transactional(readOnly = true)
+    public Page<BoardList_OutDTO> findAllWithUserForList(BoardListSearch_InDTO searchCond, Pageable pageable) {
+
+        JPAQuery<BoardList_OutDTO> jpaQuery = query.select(Projections.constructor(BoardList_OutDTO.class,
+                        board.id, board.user.id, board.title, board.views, user.username,
+                        Expressions.stringTemplate("CONCAT(YEAR({0}), '/', LPAD(MONTH({0}), 2, '0'), '/', LPAD(DAY({0}), 2, '0'))", board.createdAt),
+                        Expressions.numberTemplate(Integer.class, "COUNT({0})", comment.id)))
 
                 .from(board)
                 .innerJoin(board.user, user)
@@ -40,12 +46,15 @@ public class BoardQueryRepository {
                         likeAuthor(searchCond.getSearchKeyword(), searchCond.getSearchType()))
 
                 .groupBy(board.id)
-                .orderBy(board.createdAt.desc())
-                .limit(searchCond.getPageSize())
-                .offset(searchCond.getOffset())
+                .orderBy(board.createdAt.desc());
+
+        long total = jpaQuery.fetchCount();
+        List<BoardList_OutDTO> content = jpaQuery
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .fetch();
 
-        return result;
+        return new PageImpl<>(content, pageable, total);
     }
 
     private BooleanExpression likeTitle(String title, String searchType) {

@@ -14,11 +14,13 @@ public class BoardList_OutDTO {
 
     private String title;
     private Integer views;
-    private String createdAtFormat;
 
     // user_tb
     private String username;
 
+    private String createdAtFormat;
+
     // comment_tb
     private Integer commentCount;
+
 }
