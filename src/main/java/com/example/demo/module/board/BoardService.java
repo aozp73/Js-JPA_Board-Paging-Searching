@@ -81,7 +81,7 @@ public class BoardService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public BoardUpdate_OutDTO updateForm(Long boardId, Long userId) {
         Board boardEntity = boardRepository.findById(boardId)
                 .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
@@ -91,5 +91,17 @@ public class BoardService {
         }
 
         return new BoardUpdate_OutDTO().fromEntity(boardEntity);
+    }
+
+    @Transactional
+    public void update(BoardUpdate_InDTO boardUpdateInDTO, Long userId) {
+        Board boardEntity = boardRepository.findById(boardUpdateInDTO.getId())
+                .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
+
+        if (!Objects.equals(boardEntity.getUser().getId(), userId)) {
+            throw new CustomException("작성자만 수정할 수 있습니다.");
+        }
+
+        boardUpdateInDTO.toEntity(boardEntity);
     }
 }

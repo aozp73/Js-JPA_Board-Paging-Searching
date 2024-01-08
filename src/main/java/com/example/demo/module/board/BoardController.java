@@ -86,4 +86,12 @@ public class BoardController {
 
         return "pages/board/updateForm";
     }
+
+    @PutMapping("/auth/board")
+    public ResponseEntity<?> update(@RequestBody BoardUpdate_InDTO boardUpdateInDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        log.debug("PUT - 게시글 수정");
+        boardService.update(boardUpdateInDTO, myUserDetails.getUser().getId());
+
+        return ResponseEntity.ok().body(new ResponseDTO<>());
+    }
 }
