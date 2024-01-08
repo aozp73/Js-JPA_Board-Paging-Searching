@@ -80,4 +80,16 @@ public class BoardService {
             throw new Exception500("게시글 삭제에 실패하였습니다.");
         }
     }
+
+    @Transactional
+    public BoardUpdate_OutDTO updateForm(Long boardId, Long userId) {
+        Board boardEntity = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
+
+        if (!Objects.equals(boardEntity.getUser().getId(), userId)) {
+            throw new CustomException("작성자만 수정할 수 있습니다.");
+        }
+
+        return new BoardUpdate_OutDTO().fromEntity(boardEntity);
+    }
 }

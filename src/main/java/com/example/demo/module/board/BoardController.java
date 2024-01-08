@@ -2,10 +2,8 @@ package com.example.demo.module.board;
 
 import com.example.demo.config.security.principal.MyUserDetails;
 import com.example.demo.exception.ResponseDTO;
-import com.example.demo.module.board.dto.BoardListPageInfo_OutDTO;
-import com.example.demo.module.board.dto.BoardListSearch_InDTO;
-import com.example.demo.module.board.dto.BoardList_OutDTO;
-import com.example.demo.module.board.dto.BoardSave_InDTO;
+import com.example.demo.exception.statuscode.CustomException;
+import com.example.demo.module.board.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,11 +12,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -77,5 +77,13 @@ public class BoardController {
         boardService.delete(boardId, myUserDetails.getUser().getId());
 
         return ResponseEntity.ok().body(new ResponseDTO<>());
+    }
+
+    @GetMapping("/auth/board/{boardId}")
+    public String updateForm(@PathVariable Long boardId, @AuthenticationPrincipal MyUserDetails myUserDetails, Model model) {
+        log.debug("GET - 게시글 수정 페이지");
+        model.addAttribute("board", boardService.updateForm(boardId, myUserDetails.getUser().getId()));
+
+        return "pages/board/updateForm";
     }
 }
