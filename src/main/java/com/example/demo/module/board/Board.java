@@ -1,11 +1,17 @@
 package com.example.demo.module.board;
 
 import com.example.demo.module.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "board_tb")
 public class Board {
     @Id

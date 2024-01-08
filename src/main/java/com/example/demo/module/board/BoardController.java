@@ -3,6 +3,7 @@ package com.example.demo.module.board;
 import com.example.demo.module.board.dto.BoardListPageInfo_OutDTO;
 import com.example.demo.module.board.dto.BoardListSearch_InDTO;
 import com.example.demo.module.board.dto.BoardList_OutDTO;
+import com.example.demo.module.board.dto.BoardSave_InDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,4 +34,13 @@ public class BoardController {
 
         return "pages/board/list";
     }
+
+
+    @GetMapping("/auth/board")
+    public String saveForm(@ModelAttribute("boardSaveInDTO") BoardSave_InDTO boardSaveInDTO) {
+        log.debug("GET - 게시글 등록 페이지");
+        return "pages/board/saveForm";
+    }
+
+
 }
