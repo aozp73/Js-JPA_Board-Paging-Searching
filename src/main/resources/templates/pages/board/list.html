@@ -61,19 +61,19 @@
                     <ul class="pagination">
                         <li class="page-item" th:classappend="${boardList.first} ? 'disabled' : ''">
                             <a class="page-link" aria-label="Previous"
-                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${searchInfo.page - 1})}">
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${boardList.getPageable().pageNumber - 1})}">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
 
                         <li th:each="pageNum : ${#numbers.sequence(pagingInfo.startPage, pagingInfo.endPage)}"
-                            th:classappend="${pageNum == searchInfo.page + 1} ? 'active' : ''" class="page-item">
+                            th:classappend="${pageNum == boardList.getPageable().pageNumber + 1} ? 'active' : ''" class="page-item">
                             <a class="page-link" th:text="${pageNum}"
                                th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${pageNum} - 1)}"></a>
                         </li>
                         <li class="page-item" th:classappend="${boardList.last}  ? 'disabled' : ''">
                             <a class="page-link" aria-label="Next"
-                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${searchInfo.page + 1})}">
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${boardList.getPageable().pageNumber + 1})}">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
