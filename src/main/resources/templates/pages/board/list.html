@@ -67,9 +67,9 @@
                         </li>
 
                         <li th:each="pageNum : ${#numbers.sequence(pagingInfo.startPage, pagingInfo.endPage)}"
-                            th:classappend="${pageNum == searchInfo.page} ? 'active' : ''" class="page-item">
+                            th:classappend="${pageNum == searchInfo.page + 1} ? 'active' : ''" class="page-item">
                             <a class="page-link" th:text="${pageNum}"
-                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${pageNum}-1)}"></a>
+                               th:href="@{/board(searchType=${searchInfo.searchType}, searchKeyword=${searchInfo.searchKeyword}, page=${pageNum} - 1)}"></a>
                         </li>
                         <li class="page-item" th:classappend="${boardList.last}  ? 'disabled' : ''">
                             <a class="page-link" aria-label="Next"

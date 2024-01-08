@@ -13,13 +13,13 @@ public class BoardListSearch_InDTO {
     private String searchKeyword;
 
     @Builder.Default
-    private Integer page = 1;
+    private Integer page = 0;
 
     private final Integer pageSize = 5;
     private Integer offset;
 
     public int getOffset() {
-        return (page - 1) * pageSize;
+        return page * pageSize;
     }
 }
 

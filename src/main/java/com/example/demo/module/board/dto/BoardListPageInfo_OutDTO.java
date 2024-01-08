@@ -14,10 +14,15 @@ public class BoardListPageInfo_OutDTO {
     private Integer endPage;
 
     public BoardListPageInfo_OutDTO (Page<BoardList_OutDTO> boardList) {
-        Integer ButtonCount = 5;
-        System.out.println("boardList.getPageable().getPageNumber() = " + boardList.getPageable().getPageNumber());
-        Integer tmp = (boardList.getPageable().getPageNumber() + 1) / ButtonCount;
+        Integer ButtonCount = 5; // 1-5, 6-10 구분
+
+        Integer tmp = boardList.getPageable().getPageNumber() / ButtonCount;
         this.startPage = 1 + (tmp * ButtonCount);
         this.endPage = 5 + (tmp * ButtonCount);
+
+        int totalPage = boardList.getTotalPages();
+        if (totalPage < endPage) {
+            this.endPage = totalPage;
+        }
     }
 }
