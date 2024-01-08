@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -41,6 +42,15 @@ public class BoardController {
         return "pages/board/list";
     }
 
+    @GetMapping("/board/{boardId}")
+    public String detail(@PathVariable Long boardId, Model model) {
+        log.debug("GET - 게시글 상세 페이지");
+//        boardService.viewsCount(boardId);
+        model.addAttribute("boardList", boardService.findById(boardId));
+
+        return "pages/board/detail";
+    }
+
 
     @GetMapping("/auth/board")
     public String saveForm(@ModelAttribute("boardSaveInDTO") BoardSave_InDTO boardSaveInDTO) {
@@ -48,7 +58,6 @@ public class BoardController {
 
         return "pages/board/saveForm";
     }
-
 
     @PostMapping("/auth/board")
     public String save(@ModelAttribute("boardSaveInDTO") @Valid BoardSave_InDTO boardSaveInDTO, BindingResult bindingResult,
@@ -59,7 +68,6 @@ public class BoardController {
             return "pages/board/saveForm";
         }
         Long boardId = boardService.save(boardSaveInDTO, myUserDetails.getUser().getId());
-        log.debug("boardId = {}", boardId);
 
         return "redirect:/board";
     }
