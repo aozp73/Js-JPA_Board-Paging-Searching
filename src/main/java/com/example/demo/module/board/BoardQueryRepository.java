@@ -46,7 +46,7 @@ public class BoardQueryRepository {
                         likeAuthor(searchCond.getSearchKeyword(), searchCond.getSearchType()))
 
                 .groupBy(board.id)
-                .orderBy(board.createdAt.desc());
+                .orderBy(board.id.desc());
 
         long total = jpaQuery.fetchCount();
         List<BoardList_OutDTO> content = jpaQuery

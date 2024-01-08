@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class BoardSave_InDTO {
                 .title(this.title)
                 .content(this.content)
                 .views(0)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }

@@ -47,5 +47,4 @@ spring:
 
 logging:
   level: # TRACE > DEBUG > INFO > WARN > ERROR
-    com.example.jsmybatis_pagingsearching.web: debug
-    com.example.jsmybatis_pagingsearching.service: debug
+    com.example.demo.module: debug
