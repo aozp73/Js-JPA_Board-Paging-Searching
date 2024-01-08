@@ -45,7 +45,8 @@ public class BoardController {
     @GetMapping("/board/{boardId}")
     public String detail(@PathVariable Long boardId, Model model) {
         log.debug("GET - 게시글 상세 페이지");
-//        boardService.viewsCount(boardId);
+
+        boardService.viewsCount(boardId);
         model.addAttribute("boardList", boardService.findById(boardId));
 
         return "pages/board/detail";

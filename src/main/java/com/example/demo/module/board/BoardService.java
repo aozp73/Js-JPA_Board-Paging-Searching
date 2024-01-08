@@ -1,10 +1,7 @@
 package com.example.demo.module.board;
 
 import com.example.demo.exception.statuscode.CustomException;
-import com.example.demo.module.board.dto.BoardDetail_OutDTO;
-import com.example.demo.module.board.dto.BoardListSearch_InDTO;
-import com.example.demo.module.board.dto.BoardList_OutDTO;
-import com.example.demo.module.board.dto.BoardSave_InDTO;
+import com.example.demo.module.board.dto.*;
 import com.example.demo.module.comment.CommentRepository;
 import com.example.demo.module.user.User;
 import com.example.demo.module.user.UserRepository;
@@ -32,9 +29,17 @@ public class BoardService {
     @Transactional(readOnly = true)
     public BoardDetail_OutDTO findById(Long boardId) {
         BoardDetail_OutDTO boardDetailDTO = boardRepository.findBoardDetailWithUserForDetail(boardId);
-        List<BoardDetail_OutDTO.CommentDTO> boardDetailCommentDTO = commentRepository.findAllWithCommentForDetail(boardId);
+        List<BoardDetailComment_OutDTO> boardDetailCommentDTO = commentRepository.findAllWithCommentForDetail(boardId);
 
-        return MyDateUtils.detailFormat(boardDetailDTO, boardDetailCommentDTO);
+        return MyDateUtils.boardDetail_Format(boardDetailDTO, boardDetailCommentDTO);
+    }
+
+    @Transactional
+    public void viewsCount(Long boardId) {
+        Board boardEntity = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
+
+        boardEntity.setViews(boardEntity.getViews() + 1);
     }
 
     @Transactional(readOnly = true)

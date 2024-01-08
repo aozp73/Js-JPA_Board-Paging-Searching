@@ -2,7 +2,6 @@ package com.example.demo.module.board.dto;
 
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,31 +23,18 @@ public class BoardDetail_OutDTO {
     // user_tb
     private String username;
     // comment_tb
-    private Integer commentCount;
-    private List<CommentDTO> commentDTO;
+    private Long commentCount;
+    private List<BoardDetailComment_OutDTO> commentDTO;
 
-    public BoardDetail_OutDTO (Long id, Long userid, String title, String content, Integer views, LocalDateTime createdAtFormat,
-                               String username, Integer commentCount) {
+    public BoardDetail_OutDTO (Long id, Long userid, String title, String content, int views, LocalDateTime createdAt,
+                               String username, Long commentCount) {
         this.id = id;
         this.userId = userid;
         this.title = title;
         this.content = content;
         this.views = views;
-        this.createdAt = createdAtFormat;
+        this.createdAt = createdAt;
         this.username = username;
         this.commentCount = commentCount;
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    public static class CommentDTO {
-        private Long id;
-        private Long userId;
-        private String username;
-        private String content;
-        private Boolean editable;
-        private Timestamp createdAt;
-        private String createdAtFormat;
     }
 }
