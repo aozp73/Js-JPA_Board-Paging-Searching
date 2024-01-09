@@ -2,11 +2,17 @@ package com.example.demo.module.comment;
 
 import com.example.demo.module.board.Board;
 import com.example.demo.module.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "comment_tb")
 public class Comment {
     @Id
