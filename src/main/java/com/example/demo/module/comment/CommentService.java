@@ -4,12 +4,17 @@ import com.example.demo.exception.statuscode.CustomException;
 import com.example.demo.exception.statuscode.Exception500;
 import com.example.demo.module.board.Board;
 import com.example.demo.module.board.BoardRepository;
+import com.example.demo.module.board.dto.BoardDetailComment_OutDTO;
 import com.example.demo.module.comment.dto.CommentSave_InDTO;
+import com.example.demo.module.comment.dto.CommentSave_OutDTO;
 import com.example.demo.module.user.User;
 import com.example.demo.module.user.UserRepository;
+import com.example.demo.util.MyDateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +38,18 @@ public class CommentService {
         } catch (Exception exception) {
             throw new Exception500("댓글 저장에 실패하였습니다.");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoardDetailComment_OutDTO> findAllForSave(Long boardId, Long userId) {
+        List<BoardDetailComment_OutDTO> commentList;
+
+        try {
+            commentList = commentRepository.findAllWithCommentForDetail(boardId);
+        } catch (Exception exception) {
+            throw new Exception500("댓글 저장에 실패하였습니다."); // 저장 로직에 엮임
+        }
+
+        return MyDateUtils.boardDetailComment_Format(commentList, userId);
     }
 }

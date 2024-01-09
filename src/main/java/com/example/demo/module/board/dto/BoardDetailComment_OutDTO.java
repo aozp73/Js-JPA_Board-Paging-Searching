@@ -14,6 +14,7 @@ public class BoardDetailComment_OutDTO {
     private Long userId;
     private String username;
     private String content;
+    private Boolean editable;
     private LocalDateTime createdAt;
     private String createdAtFormat;
 
