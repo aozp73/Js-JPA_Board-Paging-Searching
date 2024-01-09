@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -32,6 +34,19 @@ public class CommentController {
         List<BoardDetailComment_OutDTO> commentList
                 = commentService.findAllForSave(commentSaveInDTO.getBoardId(), myUserDetails.getUser().getId());
 
+
+        return ResponseEntity.ok().body(new ResponseDTO<>().data(commentList));
+    }
+
+    @DeleteMapping("/auth/comment/{boardId}/{commentId}")
+    public ResponseEntity<?> delete(@PathVariable Long commentId, @PathVariable Long boardId,
+                                    @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        log.debug("DELETE - 댓글 삭제");
+        commentService.delete(commentId, myUserDetails.getUser().getId());
+
+        // 전체 댓글 리 렌더링
+        List<BoardDetailComment_OutDTO> commentList
+                = commentService.findAllForSave(boardId, myUserDetails.getUser().getId());
 
         return ResponseEntity.ok().body(new ResponseDTO<>().data(commentList));
     }

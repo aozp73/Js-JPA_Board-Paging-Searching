@@ -1,6 +1,7 @@
 package com.example.demo.module.comment;
 
 import com.example.demo.exception.statuscode.CustomException;
+import com.example.demo.exception.statuscode.Exception400;
 import com.example.demo.exception.statuscode.Exception500;
 import com.example.demo.module.board.Board;
 import com.example.demo.module.board.BoardRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -47,9 +49,29 @@ public class CommentService {
         try {
             commentList = commentRepository.findAllWithCommentForDetail(boardId);
         } catch (Exception exception) {
-            throw new Exception500("댓글 저장에 실패하였습니다."); // 저장 로직에 엮임
+            throw new Exception500("페이지를 새로고침 해주세요.");
         }
 
         return MyDateUtils.boardDetailComment_Format(commentList, userId);
+    }
+
+    @Transactional
+    public void delete(Long commentId, Long userId) {
+        Comment commentEntity = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException("댓글이 존재하지 않습니다."));
+
+        // 삭제 게시글의 댓글 DB 보존 및 postMan 대응
+        boardRepository.findById(commentEntity.getBoard().getId())
+                .orElseThrow(() -> new CustomException("게시글이 존재하지 않습니다."));
+
+        if (!Objects.equals(commentEntity.getUser().getId(), userId)) {
+            throw new Exception400("댓글 작성자만 삭제할 수 있습니다.");
+        }
+
+        try {
+            commentRepository.deleteById(commentId);
+        } catch (Exception exception) {
+            throw new Exception500("댓글 삭제에 실패하였습니다.");
+        }
     }
 }

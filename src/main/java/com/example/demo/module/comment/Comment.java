@@ -2,15 +2,15 @@ package com.example.demo.module.comment;
 
 import com.example.demo.module.board.Board;
 import com.example.demo.module.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "comment_tb")
