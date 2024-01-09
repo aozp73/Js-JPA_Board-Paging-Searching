@@ -22,6 +22,7 @@ public class CommentController {
     public ResponseEntity<?> save(@RequestBody CommentSave_InDTO commentSaveInDTO,
                                   @AuthenticationPrincipal MyUserDetails myUserDetails) {
         log.debug("POST - 댓글 작성");
+        commentService.save(commentSaveInDTO, myUserDetails.getUser().getId());
 
         return ResponseEntity.ok().body(new ResponseDTO<>().data(""));
     }
