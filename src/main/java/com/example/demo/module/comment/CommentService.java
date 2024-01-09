@@ -8,6 +8,7 @@ import com.example.demo.module.board.BoardRepository;
 import com.example.demo.module.board.dto.BoardDetailComment_OutDTO;
 import com.example.demo.module.comment.dto.CommentSave_InDTO;
 import com.example.demo.module.comment.dto.CommentSave_OutDTO;
+import com.example.demo.module.comment.dto.CommentUpdate_InDTO;
 import com.example.demo.module.user.User;
 import com.example.demo.module.user.UserRepository;
 import com.example.demo.util.MyDateUtils;
@@ -28,6 +29,7 @@ public class CommentService {
 
     @Transactional
     public void save(CommentSave_InDTO commentSaveInDTO, Long userId) {
+
         Board boardEntity = boardRepository.findById(commentSaveInDTO.getBoardId())
                 .orElseThrow(() -> new CustomException("게시물이 존재하지 않습니다."));
 
@@ -44,6 +46,7 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<BoardDetailComment_OutDTO> findAllForSave(Long boardId, Long userId) {
+
         List<BoardDetailComment_OutDTO> commentList;
 
         try {
@@ -57,6 +60,7 @@ public class CommentService {
 
     @Transactional
     public void delete(Long commentId, Long userId) {
+
         Comment commentEntity = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException("댓글이 존재하지 않습니다."));
 
@@ -73,5 +77,20 @@ public class CommentService {
         } catch (Exception exception) {
             throw new Exception500("댓글 삭제에 실패하였습니다.");
         }
+    }
+
+
+    @Transactional
+    public void update(CommentUpdate_InDTO commentUpdateInDTO, Long userId) {
+
+        Comment commentEntity = commentRepository.findById(commentUpdateInDTO.getCommentId())
+                .orElseThrow(() -> new CustomException("댓글이 존재하지 않습니다."));
+
+
+        if (!Objects.equals(commentEntity.getUser().getId(), userId)) {
+            throw new Exception400("댓글 작성자만 수정할 수 있습니다.");
+        }
+
+        commentEntity.setContent(commentUpdateInDTO.getContent());
     }
 }
