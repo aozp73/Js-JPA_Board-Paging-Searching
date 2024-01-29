@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "FROM Comment c " +
             "WHERE c.board.id = :boardId")
     List<BoardDetailComment_OutDTO> findAllWithCommentForDetail(@Param("boardId") Long boardId);
+
+    List<Comment> findByBoardId(Long boardId);
 }

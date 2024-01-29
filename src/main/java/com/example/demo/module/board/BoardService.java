@@ -4,6 +4,7 @@ import com.example.demo.exception.statuscode.CustomException;
 import com.example.demo.exception.statuscode.Exception400;
 import com.example.demo.exception.statuscode.Exception500;
 import com.example.demo.module.board.dto.*;
+import com.example.demo.module.comment.Comment;
 import com.example.demo.module.comment.CommentRepository;
 import com.example.demo.module.user.User;
 import com.example.demo.module.user.UserRepository;
@@ -72,6 +73,19 @@ public class BoardService {
 
         if (!Objects.equals(boardEntity.getUser().getId(), userId)) {
             throw new Exception400("작성자만 삭제할 수 있습니다.");
+        }
+
+        /**
+         * 게시글 삭제 시, 댓글 처리 (1:N)
+         * - 처 리: 삭제 게시글의 댓글 Board 필드 null -> 게시글 삭제
+         * - 이 유: 작성 댓글을 모아서 볼 수 있는 확장성 고려 (Board 필드가 null일 경우 '삭제된 게시물' 표기)
+         * - 다른 방법: 1. 게시글, 댓글에 isDeleted 필드 추가 및 상태 관리 (실제 삭제 x)
+         *            2. 게시글, 댓글 함께 삭제
+         *            3. 별도 백업 DB 구성 후, 고객 센터에서 필요 시 제공
+         */
+        List<Comment> comments = commentRepository.findByBoardId(boardId);
+        for (Comment comment : comments) {
+            comment.setBoard(null);
         }
 
         try {
