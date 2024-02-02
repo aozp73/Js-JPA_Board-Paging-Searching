@@ -35,6 +35,25 @@
 
 <br> <br>
 
+## 기술 블로그
+<br>
+
+&nbsp;&nbsp;&nbsp; - [프로젝트 세팅](https://blog.naver.com/aozp73/223342173793) <br>
+
+&nbsp;&nbsp;&nbsp; - [회원가입](https://blog.naver.com/aozp73/223342178734) <br>
+
+&nbsp;&nbsp;&nbsp; - [로그인 및 로그아웃](https://blog.naver.com/aozp73/223342183122) <br>
+
+&nbsp;&nbsp;&nbsp; - [게시글 목록 - 검색 (동적 Query)](https://blog.naver.com/aozp73/223342201437) <br>
+
+&nbsp;&nbsp;&nbsp; - [게시글 목록 - 페이징](https://blog.naver.com/aozp73/223342232213) <br>
+
+<br>
+
+※ 게시글 - 등록, 수정, 삭제 / 댓글 - 등록, 수정, 삭제 <br>
+&nbsp;&nbsp;&nbsp; (타 프로젝트에서 다수 진행 후, README.md 및 포스팅 정리 / 단순 반복 CRUD여서 생략)
+
+<br> <br>
 
 ## View / 소스코드
 
